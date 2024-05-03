@@ -4,7 +4,6 @@ from discord import Interaction, Member, Embed
 from discord.app_commands import command
 from discord.ext.commands import Context
 
-
 from api.user_api import UserAPIClient
 from api.base_api import APIException
 from bot.embeds.user_embed import UserEmbed
