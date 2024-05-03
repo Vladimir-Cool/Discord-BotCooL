@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="enabledOnReformat" value="true" />
     <option name="enabledOnSave" value="true" />
-    <option name="sdkUUID" value="b8af9f70-93b4-4e3b-8c5d-36e8a5a8ac9e" />
+    <option name="sdkName" value="Python 3.9 (Discord-BotCooL)" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (Discord-BotCooL)" project-jdk-type="Python SDK" />
   <component name="PyCharmProfessionalAdvertiser">
