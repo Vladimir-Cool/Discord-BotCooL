@@ -27,9 +27,12 @@ async def create_embed(name: str) -> Embed:
 
 @command(name="test-one", description="Тестирование для фабрики команд 1")
 async def test_one(interaction: Interaction, arg: str):
+    await interaction.response.defer(ephemeral=False, thinking=True)
+
     embed = await create_embed(name="embed_1")
 
-    await interaction.response.send_message(f"тест {arg}", embed=embed)
+    # await interaction.response.send_message(f"тест {arg}", embed=embed)
+    await interaction.edit_original_response(content=f"тест {arg}", embed=embed)
 
 
 @command(name="test-two", description="Тестирование для фабрики команд 2")
