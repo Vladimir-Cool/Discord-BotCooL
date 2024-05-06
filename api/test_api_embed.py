@@ -5,8 +5,7 @@ from .base_api import APIClient
 
 
 class EmbedAPIClient(APIClient):
-    url = "new_url"
+    async def get_embed(self, name_embed: str, data: Dict = None):
+        response: Response = await self.get(url=f"{self.url}embed/{name_embed}/")
 
-    async def get_embed(self, name_embed: str, data: Dict):
-        response: Response = await self.get(url=self.url)
-        return response.json()
+        return response.json()[0]

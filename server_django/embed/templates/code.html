@@ -1,0 +1,36 @@
+{% load static %}
+
+{# using https://ace.c9.io/ v1.4.12 #}
+
+<label>
+    <select id="{{ widget.attrs.id }}__highlight_mode">
+        <option value="django">Django</option>
+        <option selected value="json">JSON</option>
+        <option value="markdown">Markdown</option>
+    </select>
+</label>
+
+<textarea id="{{ widget.attrs.id }}" style="display: none" name="{{ widget.name }}" hidden>{{ widget.value }}</textarea>
+<div id="{{ widget.attrs.id }}__full" style="width: 100%">{{ widget.value }}</div>
+
+<script src="{% static '/ace/ace.js' %}"></script>
+<script>
+    (function () {
+        const hidden_text_area = document.getElementById("{{ widget.attrs.id }}");
+        const highlight_mode_select = document.getElementById("{{ widget.attrs.id }}__highlight_mode");
+        const editor = ace.edit("{{ widget.attrs.id }}__full", {
+            theme: "ace/theme/crimson_editor",
+            mode: "ace/mode/json",
+            minLines: 10,
+            wrap: true,
+            maxLines: 100,
+            printMargin: false,
+        });
+        editor.session.on('change', function (delta) {
+            hidden_text_area.value = editor.getValue();
+        });
+        highlight_mode_select.addEventListener('change', function (event) {
+            editor.session.setMode('ace/mode/' + this.options[this.selectedIndex].value);
+        });
+    })();
+</script>

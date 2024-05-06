@@ -4,66 +4,43 @@ from discord import Interaction, Member, Embed
 from discord.app_commands import command
 from discord.ext.commands import Context
 
-from api.user_api import UserAPIClient
-from api.base_api import APIException
+from api.test_api_embed import EmbedAPIClient
 from bot.embeds.user_embed import UserEmbed
 from bot.views.user_view import UserView
 
-row_embed_1 = {
-    "title": "Заголовок1",
-    "description": "Описание1",
-    "color": 16711680,
-    "fields": [
-        {"name": "Поле 1", "value": "Значение поля 1", "inline": False},
-        {"name": "Поле 2", "value": "Значение поля 2", "inline": False},
-    ],
-}
+# json_example = {
+#     "content": str(),
+#     "embed": Embed(),
+# }
 
-row_embed_2 = {
-    "title": "Заголовок2",
-    "description": "Описание2",
-    "color": 16711690,
-    "fields": [
-        {"name": "Поле 1", "value": "Значение поля 1", "inline": True},
-        {"name": "Поле 2", "value": "Значение поля 2", "inline": True},
-    ],
-}
+async def create_embed(name: str) -> Embed:
+    """
+    Получает по API шаблон Embed-а и создает объект Embed.
+    """
+    async with EmbedAPIClient() as embed_api:
+        data = await embed_api.get_embed(name)
 
-row_embed_3 = {
-    "title": "Заголовок3",
-    "description": "Описание3",
-    "color": 16714249,
-    "fields": [
-        {"name": "Поле 1", "value": "Значение поля 1", "inline": True},
-        {"name": "Поле 2", "value": "Значение поля 2", "inline": True},
-        {"name": "Поле 3", "value": "Значение поля 3", "inline": True},
-    ],
-}
-
-embed_1 = Embed.from_dict(row_embed_1)
-embed_2 = Embed.from_dict(row_embed_2)
-embed_3 = Embed.from_dict(row_embed_3)
-
-
-json_example = {
-    "content": str(),
-    "embed": Embed(),
-}
+    row_embed1 = data["embed_template"]
+    dict_row = json.loads(row_embed1)
+    return Embed.from_dict(dict_row)
 
 
 @command(name="test-one", description="Тестирование для фабрики команд 1")
 async def test_one(interaction: Interaction, arg: str):
-    extras = interaction.extras
-    await interaction.response.send_message(f"тест {arg}", embed=embed_1)
+    embed = await create_embed(name="embed_1")
+
+    await interaction.response.send_message(f"тест {arg}", embed=embed)
 
 
 @command(name="test-two", description="Тестирование для фабрики команд 2")
 async def test_two(interaction: Interaction, arg: str):
+    embed = await create_embed(name="embed_2")
 
-    await interaction.response.send_message(f"тест {arg}", embed=embed_2)
+    await interaction.response.send_message(f"тест {arg}", embed=embed)
 
 
 @command(name="test-tree", description="Тестирование для фабрики команд 3")
 async def test_tree(interaction: Interaction, arg: str):
+    embed = await create_embed(name="embed_3")
 
-    await interaction.response.send_message(f"тест {arg}", embed=embed_3)
+    await interaction.response.send_message(f"тест {arg}", embed=embed)

@@ -31,6 +31,7 @@ from characters.views import CharactersViewSet, CharactersViewList
 from inventory.views import InventoryViewSet
 from items.views import ItemsViewSet
 from stats.views import StatsViewSet
+from embed.views import EmbedViewSet
 
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
@@ -38,6 +39,7 @@ router.register(r"characters", CharactersViewSet, basename="characters")
 router.register(r"inventory", InventoryViewSet, basename="inventory")
 router.register(r"items", ItemsViewSet, basename="items")
 router.register(r"stats", StatsViewSet, basename="stats")
+# router.register(r"embed", EmbedViewSet, basename="embed")
 
 
 print(router.urls)
@@ -59,4 +61,6 @@ urlpatterns = [
         "api/v1/characters/<int:pk>/<str:name>/", CharactersViewList.as_view()
     ),  # Вернет персонажа по id User и name
     # path("api/v1/charactersdelete/<int:pk>/<str:name>/", CharactersDelet.as_view())
+    path("api/v1/embed/", EmbedViewSet.as_view()),
+    path("api/v1/embed/<str:name>/", EmbedViewSet.as_view()),
 ]
