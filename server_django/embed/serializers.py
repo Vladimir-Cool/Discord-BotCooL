@@ -1,9 +1,9 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from embed.models import EmbedModel
 
 
-class EmbedSerializer(serializers.ModelSerializer):
+class EmbedSerializer(ModelSerializer):
 
     class Meta:
         model = EmbedModel
@@ -11,7 +11,7 @@ class EmbedSerializer(serializers.ModelSerializer):
         fields = (
             "name",
             "embed_template",
-            "embed_enabled"
+            "embed_enabled",
         )
         
         # extra_kwargs = {}

@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from commands.models import CommandsModel
 
+
 @register(CommandsModel)
 class CommandsAdmin(ModelAdmin):
-    list_display = ["name", "description", "enabled", "embed_message"]
+    list_display = ["name", "description", "enabled", "embed"]

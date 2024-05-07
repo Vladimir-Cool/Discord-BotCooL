@@ -4,18 +4,13 @@ from embed.models import EmbedModel
 from embed.serializers import EmbedSerializer
 
 
-class EmbedViewSet(generics.ListAPIView):
+class EmbedAPIView(generics.ListAPIView):
     serializer_class = EmbedSerializer
 
     def get_queryset(self):
         name = self.kwargs.get("name")
         print(name)
-        if not name:
-            return EmbedModel.objects.all()
+        if name:
+            return EmbedModel.objects.filter(name=name)
 
-        return EmbedModel.objects.filter(name=name)
-
-
-
-
-
+        return EmbedModel.objects.all()

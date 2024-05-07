@@ -42,8 +42,8 @@ async def test_two(interaction: Interaction, arg: str):
     await interaction.response.send_message(f"тест {arg}", embed=embed)
 
 
-@command(name="test-tree", description="Тестирование для фабрики команд 3")
-async def test_tree(interaction: Interaction, arg: str):
+@command(name="test-three", description="Тестирование для фабрики команд 3")
+async def test_three(interaction: Interaction, arg: str):
     embed = await create_embed(name="embed_3")
 
     await interaction.response.send_message(f"тест {arg}", embed=embed)
