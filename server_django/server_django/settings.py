@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "inventory.apps.InventoryConfig",
     "items.apps.ItemsConfig",
     "embed.apps.EmbedConfig",
+    "commands.apps.CommandsConfig",
 ]
 
 MIDDLEWARE = [
