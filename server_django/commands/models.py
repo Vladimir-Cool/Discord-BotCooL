@@ -8,7 +8,9 @@ class CommandsModel(models.Model):
     description = models.CharField(max_length=500)
     enabled = models.BooleanField()
 
-    embed = models.ForeignKey(to=EmbedModel, on_delete=models.CASCADE)
+    embed = models.ForeignKey(
+        to=EmbedModel, on_delete=models.CASCADE, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "Команда"

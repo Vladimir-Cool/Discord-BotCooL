@@ -7,11 +7,13 @@ from discord.ext.commands import Context
 from api.test_api_embed import EmbedAPIClient
 from bot.embeds.user_embed import UserEmbed
 from bot.views.user_view import UserView
+from .base import command_custom
 
 # json_example = {
 #     "content": str(),
 #     "embed": Embed(),
 # }
+
 
 async def create_embed(name: str) -> Embed:
     """
@@ -25,24 +27,22 @@ async def create_embed(name: str) -> Embed:
     return Embed.from_dict(dict_row)
 
 
-@command(name="test-one", description="Тестирование для фабрики команд 1")
+@command_custom
 async def test_one(interaction: Interaction, arg: str):
-    await interaction.response.defer(ephemeral=False, thinking=True)
-
     embed = await create_embed(name="embed_1")
+    return {"embed": embed}
+
+
+# @command(name="test-two", description="Тестирование для фабрики команд 2")
+async def test_two(interaction: Interaction, arg: str):
+    await interaction.response.defer(ephemeral=False, thinking=True)
+    embed = await create_embed(name="embed_2")
 
     # await interaction.response.send_message(f"тест {arg}", embed=embed)
     await interaction.edit_original_response(content=f"тест {arg}", embed=embed)
 
 
-@command(name="test-two", description="Тестирование для фабрики команд 2")
-async def test_two(interaction: Interaction, arg: str):
-    embed = await create_embed(name="embed_2")
-
-    await interaction.response.send_message(f"тест {arg}", embed=embed)
-
-
-@command(name="test-three", description="Тестирование для фабрики команд 3")
+# @command(name="test-three", description="Тестирование для фабрики команд 3")
 async def test_three(interaction: Interaction, arg: str):
     embed = await create_embed(name="embed_3")
 

@@ -1,13 +1,13 @@
-from discord import Client, Intents
-from discord.ext.commands import Bot, command
-from discord.ext.commands.context import Context
-from discord.message import Message
+from discord import Client, Intents, Object
 from discord.member import Member
-from discord.app_commands import CommandTree
-import discord
-from conf_bot import settings
+from discord.app_commands import CommandTree, Command
 
-vova_cool_guild = discord.Object(id=settings.GUILD_ID)
+
+from bot.conf_bot import settings, handlers_list
+from api.command_api import CommandsAPIClient
+
+
+# vova_cool_guild = Object(id=settings.GUILD_ID)
 
 
 class BotClient(Client):
@@ -18,20 +18,49 @@ class BotClient(Client):
 
     def __init__(self):
         super().__init__(command_prefix="!", intents=Intents().all())
+        self.tree = CommandTree(client=self)
         self.synced = False
 
     async def on_ready(self):
         """Функция запускается когда бот успешно запустился."""
-        print(f"Бот запущен ")
-        # await self.tree.sync()
-
+        print("--ОР--РЕАДИ--")
         channel = self.get_channel(settings.CHANNEL_BASIC_ID)
+        await self.refresh_commands()
+        print(f"Бот запущен ")
         await channel.send("Я снова подключился")
 
-    # async def setup_hook(self):
-    #     """Синхронизирует дерево команд с guild discord"""
-    #     # self.tree.copy_global_to(guild=TEST_GUILD)
-    #     await self.tree.sync(guild=vova_cool_guild)
+    async def setup_hook(self):
+        """---"""
+        # self.tree.copy_global_to(guild=TEST_GUILD)
+        # await self.tree.sync(guild=vova_cool_guild)
+
+        print("--Сетап--ХУК--")
+
+    async def refresh_commands(self):
+        """
+        command_list - мы получаем json с настройками команд по API
+        """
+        self.tree.clear_commands(guild=None)
+
+        async with CommandsAPIClient() as command_api:
+            command_list = await command_api.get_commands()
+
+        for row_command in command_list:
+            if row_command["enabled"]:
+                handlers = handlers_list[row_command["name"]]
+                new_command = Command(
+                    name=row_command["name"],
+                    description=row_command["description"],
+                    callback=handlers,
+                )
+                # new_command.guild_only = True
+                # new_command.on_error =
+                # new_command.default_permissions =
+
+                self.tree.add_command(new_command)
+
+        result_sync = await self.tree.sync(guild=None)
+        print(f"Синхронизировано {len(result_sync)} команд")
 
     async def on_member_join(self, member: Member = None):
         print(f"новый пользователь")
@@ -47,3 +76,4 @@ class BotClient(Client):
 
 
 bot = BotClient()
+bot.run(settings.TOKEN)
