@@ -63,9 +63,13 @@ class UserCharacterAPIList(generics.ListCreateAPIView):
     def get_queryset(self):
         """Метод который переопределяет поведение queryset для выборки объектов"""
         pk = self.kwargs.get("pk")
-        if not pk:
-            return User.objects.prefetch_related("characters").all()
-        return User.objects.prefetch_related("characters").filter(discord_id=pk)
+        embed = self.request.query_params.get(
+            "embed"
+        )  # Тут мы обращаемся к объекту request и достаем из него переданные параметры.
+
+        if pk:
+            queryset = User.objects.prefetch_related("characters").filter(discord_id=pk)
+        return User.objects.prefetch_related("characters").all()
         # ^^^^ filter(). с get() не работает потому что вернуть надо queryset
 
 

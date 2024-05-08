@@ -1,3 +1,4 @@
+from typing import Dict, Optional
 from httpx import Response
 
 from .base_api import APIClient
@@ -11,9 +12,9 @@ class UserAPIClient(APIClient):
 
     url = f"http://127.0.0.1:8000/api/v1/"
 
-    async def get_user(self, discord_id: int):
+    async def get_user(self, discord_id: int, data: Optional[Dict]):
         response: Response = await self.get(
-            url=f"{self.url}userswithchars/{discord_id}/"
+            url=f"{self.url}userswithchars/{discord_id}/", params=data
         )
         return response.json()
 

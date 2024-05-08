@@ -23,7 +23,7 @@ class BotClient(Client):
 
     async def on_ready(self):
         """Функция запускается когда бот успешно запустился."""
-        print("--ОР--РЕАДИ--")
+        print("--ОН--РЕАДИ--")
         channel = self.get_channel(settings.CHANNEL_BASIC_ID)
         await self.refresh_commands()
         print(f"Бот запущен ")
@@ -48,10 +48,17 @@ class BotClient(Client):
         for row_command in command_list:
             if row_command["enabled"]:
                 handlers = handlers_list[row_command["name"]]
+
+                if row_command["embed"]:
+                    embed_name = row_command["embed"]["name"]
+                else:
+                    embed_name = None
+
                 new_command = Command(
                     name=row_command["name"],
                     description=row_command["description"],
                     callback=handlers,
+                    extras={"embed": embed_name},
                 )
                 # new_command.guild_only = True
                 # new_command.on_error =

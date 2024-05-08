@@ -43,7 +43,7 @@ router.register(r"stats", StatsViewSet, basename="stats")
 # router.register(r"embed", EmbedAPIView, basename="embed")
 
 
-print(router.urls)
+# print(router.urls)
 
 
 urlpatterns = [

@@ -6,6 +6,7 @@ from api.user_api import UserAPIClient
 from api.base_api import APIException
 from bot.embeds.user_embed import UserEmbed
 from bot.views.user_view import UserView
+from .base import command_custom
 
 
 @command(name="регистрация", description="Регистрация нового пользователя в системе")
@@ -31,16 +32,46 @@ async def registration(interaction: Interaction, name: str):
             await interaction.response.send_message(f'Имя "{name}" Уже используется')
 
 
-@command(name="профиль", description="Просмотр профиля")
+# @command(name="профиль", description="Просмотр профиля")
+# async def user_info(interaction: Interaction, member: Member = None):
+#     """Команда которая возврашает профиль пользователя или список персонажей"""
+#     # Ууууу тернарное выражение...
+#     discord_id = member.id if member else interaction.user.id
+#
+#     try:
+#         async with UserAPIClient() as api_client:
+#             users: list = await api_client.get_user(discord_id=discord_id)
+#             user = users[0]
+#
+#         if user["characters"]:
+#             view = UserView(user["characters"])
+#         else:
+#             view = UserView()
+#
+#         embed = UserEmbed(user)
+#
+#         await interaction.response.send_message(embed=embed, view=view)
+#
+#     except APIException as e:
+#         await interaction.response.send_message(e.data)
+
+
+@command_custom
 async def user_info(interaction: Interaction, member: Member = None):
     """Команда которая возврашает профиль пользователя или список персонажей"""
     # Ууууу тернарное выражение...
     discord_id = member.id if member else interaction.user.id
-
+    embed = interaction.command.extras.get("embed")
+    print(embed)
     try:
         async with UserAPIClient() as api_client:
-            users: list = await api_client.get_user(discord_id=discord_id)
-            user = users[0]
+            users: list = await api_client.get_user(
+                discord_id=discord_id, data={"embed": embed}
+            )
+            if users:
+                user = users[0]
+            else:
+                return {"error": "Такой пользователь не найден"}
 
         if user["characters"]:
             view = UserView(user["characters"])
@@ -49,10 +80,13 @@ async def user_info(interaction: Interaction, member: Member = None):
 
         embed = UserEmbed(user)
 
-        await interaction.response.send_message(embed=embed, view=view)
+        return {
+            "embed": embed,
+            "view": view,
+        }
 
     except APIException as e:
-        await interaction.response.send_message(e.data)
+        return {"content": e}
 
 
 @command(name="удали", description="Удалит твой аккаунт насовсем, сильно на совсем")

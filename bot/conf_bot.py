@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 import os
 from pydantic_settings import BaseSettings
-from commands.test_command import test_one, test_two, test_three
-from commands.refresh import refresh_com
+from bot.commands.test_command import test_one, test_two, test_three
+from bot.commands.refresh import refresh_com
+from bot.commands.user_commands import user_info
 
 load_dotenv(dotenv_path="..\.env")
 
@@ -21,4 +22,5 @@ handlers_list = {
     "test_two": test_two,
     "test_three": test_three,
     "refresh_com": refresh_com,
+    "user_info": user_info,
 }
