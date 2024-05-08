@@ -37,7 +37,7 @@ class UserCharactersSerializer(UserSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        if
+        pass
 
 # class UserModel:
 #     """Класс модели для демонстрации серриализации"""
