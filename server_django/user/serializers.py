@@ -27,17 +27,16 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
 
-
 class UserCharactersSerializer(UserSerializer):
     """Сериализация для модели User и связанной модели CharacterModel"""
 
     characters = CharactersSerializers(many=True, read_only=True)
 
-
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        pass
+        return representation
+
 
 # class UserModel:
 #     """Класс модели для демонстрации серриализации"""

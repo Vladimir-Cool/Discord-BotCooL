@@ -31,7 +31,7 @@ from characters.views import CharactersViewSet, CharactersViewList
 from inventory.views import InventoryViewSet
 from items.views import ItemsViewSet
 from stats.views import StatsViewSet
-from embed.views import EmbedAPIView
+from embed.views import EmbedAPIView, EmbedUserView
 from commands.views import CommandsAPIView
 
 router = DefaultRouter()
@@ -66,4 +66,5 @@ urlpatterns = [
     path("api/v1/embed/<str:name>/", EmbedAPIView.as_view()),
     path("api/v1/command/", CommandsAPIView.as_view()),
     path("api/v1/command/<str:name>", CommandsAPIView.as_view()),
+    path("api/v1/renderembed/", EmbedUserView.as_view()),
 ]

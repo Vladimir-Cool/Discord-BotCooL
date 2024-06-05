@@ -12,11 +12,13 @@ class UserAPIClient(APIClient):
 
     url = f"http://127.0.0.1:8000/api/v1/"
 
-    async def get_user(self, discord_id: int, data: Optional[Dict]):
+    async def get_user(self, discord_id: int):
         response: Response = await self.get(
-            url=f"{self.url}userswithchars/{discord_id}/", params=data
+            url=f"{self.url}userswithchars/{discord_id}/"
         )
-        return response.json()
+        if response.json():
+            return response.json()[0]
+        return
 
     async def post_reg(self, name: str, discord_id: int):
         data = {

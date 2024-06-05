@@ -8,11 +8,10 @@ class EmbedModel(models.Model):
     embed_enabled - Флаг указывает активен ли Embed для выбора ???НАДО-ЛИ?
 
     """
+
     name = models.CharField(max_length=255, unique=True)
     embed_template = models.TextField()
     embed_enabled = models.BooleanField(default=True)
-
-
 
     class Meta:
         verbose_name = "Embed"

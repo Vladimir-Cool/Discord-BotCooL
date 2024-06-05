@@ -31,9 +31,6 @@ class BotClient(Client):
 
     async def setup_hook(self):
         """---"""
-        # self.tree.copy_global_to(guild=TEST_GUILD)
-        # await self.tree.sync(guild=vova_cool_guild)
-
         print("--Сетап--ХУК--")
 
     async def refresh_commands(self):
@@ -58,7 +55,7 @@ class BotClient(Client):
                     name=row_command["name"],
                     description=row_command["description"],
                     callback=handlers,
-                    extras={"embed": embed_name},
+                    extras={"embed_name": embed_name},
                 )
                 # new_command.guild_only = True
                 # new_command.on_error =
