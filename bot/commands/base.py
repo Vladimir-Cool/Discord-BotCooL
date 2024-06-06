@@ -4,15 +4,16 @@ import json
 
 from discord import Interaction, Member, Embed
 
-from api.test_api_embed import EmbedAPIClient
+from api.embed_api import EmbedAPIClient
 
 
 def example(interaction: Interaction, *args, **kwargs) -> Dict:
     pass
 
 
-async def API_create_embed(name: str) -> Embed:
+async def fall__API_create_embed(name: str) -> Embed:
     """
+    ПЕРЕПИСАТЬ ПОД РЕНДЕРИНГ
     Получает по API шаблон Embed-а и создает объект Embed.
     name - имя Embed
     """
@@ -50,14 +51,27 @@ def command_custom(func):
         print("ROW-DATA---------")
         print(row_data)
         print(row_data.keys())
-        if "embed" in row_data.keys():
-            msg_data["embed"] = create_embed(row_data["embed"])
 
         if "content" in row_data.keys():
             msg_data["content"] = row_data["content"]
 
+        embed_name = interaction.command.extras.get("embed_name")
+        if embed_name:
+            if "data_obj" in row_data.keys():
+                async with EmbedAPIClient() as api_embed:
+                    row_data["data_obj"]["embed_name"] = embed_name
+                    embed_raw = await api_embed.render_embed(row_data["data_obj"])
+                msg_data["embed"] = create_embed(embed_raw)
+
+        # if "embed" in row_data.keys():
+        #     msg_data["embed"] = create_embed(row_data["embed"]
+
+        if "view" in row_data.keys():
+            msg_data["view"] = row_data["view"]
+
         if "error" in row_data.keys():
             msg_data["content"] = f"ОШИБКА!!! - {row_data['error']}"
+
         print("MSG_DATA---------")
         print(msg_data)
 
@@ -68,3 +82,22 @@ def command_custom(func):
         #     await interaction.edit_original_response(content=f"Ошибка: {e}")
 
     return in_func
+
+
+@command_custom
+async def example_command(interaction: Interaction):
+    """
+    Привер функции сомант для понимания
+    :param **kwarg Можно объявлять любые переменные, в декораторе они все пересылаються
+
+    В функции происходит нужная нам логика
+
+    :return Возвращаем словарь ключи словаря:
+    ---'content' - Сообщение, которое будет передано
+    ---'data_obj' - Объект для рендеринга Embed
+    ---'embed' - Готовый словарь для класса Embed
+    ---'error' - Сообщение ошибки
+    ---'view' - Готовый объект View. Содержит кнопки и селекты. Все это пока что генерируется в команде.
+    """
+    pass
+    return {}

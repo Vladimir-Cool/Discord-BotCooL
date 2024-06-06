@@ -51,10 +51,10 @@ async def user_reg(interaction: Interaction, name: str):
     except APIException as e:
         if "discord_id" in e.data.keys():
             return {
-                "content": 'Вы уже зарегистрировались просмотреть свой профиль можно командой "/профиль"'
+                "error": 'Вы уже зарегистрировались просмотреть свой профиль можно командой "/user_info"'
             }
         elif "name" in e.data.keys():
-            return {"content": f'Имя "{name}" Уже используется'}
+            return {"error": f'Имя "{name}" Уже используется'}
 
 
 @command_custom
@@ -62,7 +62,6 @@ async def user_info(interaction: Interaction, member: Member = None):
     """Команда которая возврашает профиль пользователя и список персонажей"""
     # Ууууу тернарное выражение...
     discord_id = member.id if member else interaction.user.id
-    embed_name = interaction.command.extras.get("embed_name")
 
     try:
         async with UserAPIClient() as api_client:
@@ -70,24 +69,24 @@ async def user_info(interaction: Interaction, member: Member = None):
         if not user:
             return {"error": "Такой пользователь не найден"}
 
-        # if user["characters"]:
-        #     view = UserView(user["characters"])
-        # else:
-        #     view = UserView()
+        if user["characters"]:
+            view = UserView(user["characters"])
+        else:
+            view = UserView()
 
-        if embed_name:
-            async with EmbedAPIClient() as api_embed:
-                user["embed_name"] = embed_name
-
-            embed_raw = await api_embed.render_embed(user)
+        # embed_name = interaction.command.extras.get("embed_name")
+        # if embed_name:
+        #     async with EmbedAPIClient() as api_embed:
+        #         user["embed_name"] = embed_name
+        #         embed_raw = await api_embed.render_embed(user)
 
         return {
-            "embed": embed_raw,
-            # "view": view,
+            "data_obj": user,
+            "view": view,
         }
 
     except APIException as e:
-        return {"content": e}
+        return {"error": e}
 
 
 @command(name="удали", description="Удалит твой аккаунт насовсем, сильно на совсем")

@@ -21,7 +21,7 @@ class CharacterAPIClient(APIClient):
         response: Response = await self.get(
             url=f"{self.url}characters/{discord_id}/{name}/"
         )
-        return response.json()
+        return response.json()[0]
 
     async def get_char_for_user(self, discord_id: int):
         """Вернет список персонажей по id user"""
