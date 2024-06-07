@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.request import Request
-
+from rest_framework.response import Response
 
 from .models import CharactersModel
 from .serializers import CharactersSerializers
@@ -20,9 +20,17 @@ class CharactersViewSet(viewsets.ModelViewSet):
     #         return CharactersModel.objects.all()
     #     return CharactersModel.objects.filter(discord_id=discord_id, name=name)
     def destroy(self, request: Request, *args, **kwargs):
+        # тут надо дернуть персонажа из БД и проверить га соответствеи пользователю.
+        # Пользователя id надо передать
         print(request.data)
 
-        super().destroy(request, *args, **kwargs)
+        instance = self.get_object()
+        print(instance.user.discord_id)
+        if instance.user.discord_id == request.data["discord_id"]:
+            self.perform_destroy(instance)
+            serializer = self.get_serializer(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT, data=serializer.data)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class CharactersViewList(generics.ListCreateAPIView):

@@ -5,7 +5,11 @@ from bot.commands.test_command import test_one, test_two, test_three
 from bot.commands.refresh import refresh_com
 from bot.commands.user_commands import user_info, user_reg
 from bot.commands.help import help_func
-from bot.commands.character_commands import character_info, character_create
+from bot.commands.character_commands import (
+    character_info,
+    character_create,
+    character_delete,
+)
 
 load_dotenv(dotenv_path="..\.env")
 
@@ -29,4 +33,5 @@ handlers_list = {
     "help": help_func,
     "char_info": character_info,
     "char_create": character_create,
+    "char_delete": character_delete,
 }

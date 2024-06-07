@@ -74,12 +74,6 @@ async def user_info(interaction: Interaction, member: Member = None):
         else:
             view = UserView()
 
-        # embed_name = interaction.command.extras.get("embed_name")
-        # if embed_name:
-        #     async with EmbedAPIClient() as api_embed:
-        #         user["embed_name"] = embed_name
-        #         embed_raw = await api_embed.render_embed(user)
-
         return {
             "data_obj": user,
             "view": view,

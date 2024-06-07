@@ -23,12 +23,12 @@
 #     async with CommandsAPIClient() as command_api:
 #         command_list = await command_api.get_commands()
 #
-#         for row_command in command_list:
-#             if row_command["enabled"]:
-#                 handlers = handlers_list[row_command["embed"]["name"]]
+#         for raw_command in command_list:
+#             if raw_command["enabled"]:
+#                 handlers = handlers_list[raw_command["embed"]["name"]]
 #                 new_command = Command(
-#                     name=row_command["name"],
-#                     description=row_command["description"],
+#                     name=raw_command["name"],
+#                     description=raw_command["description"],
 #                     callback=handlers,
 #                 )
 #                 new_command.guild_only = True

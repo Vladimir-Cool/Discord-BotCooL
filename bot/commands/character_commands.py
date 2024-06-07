@@ -14,21 +14,12 @@ from bot.servise.selection_lists import name_autocomplete
 from bot.commands.base import command_custom
 
 
-# @command(name="персонаж-создать", description="Команда для создания персонажа")
 @command_custom
-async def character_create(interaction: Interaction, name: str):
+async def character_create(interaction: Interaction, character_name: str):
 
     async with CharacterAPIClient() as api_client:
-        character = await api_client.post_char(interaction.user.id, name)
+        character = await api_client.post_char(interaction.user.id, character_name)
 
-    # embed_name = interaction.command.extras.get("embed_name")
-    # if embed_name:
-    #     async with EmbedAPIClient() as api_embed:
-    #         character["embed_name"] = embed_name
-    #         embed_raw = await api_embed.render_embed(character)
-
-    # embed = CharacterEmbed(char)
-    # await interaction.response.send_message(embed=embed)
     return {"data_obj": character}
 
 
@@ -49,25 +40,24 @@ async def character_create(interaction: Interaction, name: str):
 
 
 @command_custom
-@autocomplete(name=name_autocomplete)
-async def character_info(interaction: Interaction, name: str):
+@autocomplete(character_name=name_autocomplete)
+async def character_info(interaction: Interaction, character_name: str):
     """Просмотр персонажа"""
 
     async with CharacterAPIClient() as api_client:
         characters = await api_client.get_char(
             interaction.user.id,
-            name,
+            character_name,
         )
-
-    # embed_name = interaction.command.extras.get("embed_name")
-    # if embed_name:
-    #     async with EmbedAPIClient() as api_embed:
-    #         characters["embed_name"] = embed_name
-    #         embed_raw = await api_embed.render_embed(characters)
 
     return {"data_obj": characters}
 
 
-@command(name="персонаж-удалить", description="Команда для удаления персонажа")
-async def character_delete(interaction: Interaction):
-    pass
+@command_custom
+@autocomplete(character_name=name_autocomplete)
+async def character_delete(interaction: Interaction, character_name: str):
+    async with CharacterAPIClient() as api_client:
+        delete_character = await api_client.delete_char(
+            interaction.user.id, character_name
+        )
+    return {"data_obj": delete_character}
