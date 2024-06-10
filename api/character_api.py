@@ -43,12 +43,8 @@ class CharacterAPIClient(APIClient):
         """Удаление персонажа
         Надо переделывать бек, добавлять аргумент дискорда в url"""
 
-        data = {
-            "discord_id": discord_id,
-        }
-
         response: Response = await self.delete(
-            url=f"{self.url}characters/{character_name}/",
-            json=data,
+            url=f"{self.url}characters/{discord_id}/{character_name}/delete/"
         )
+
         return response.json()

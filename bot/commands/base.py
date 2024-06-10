@@ -44,7 +44,7 @@ def command_custom(func):
     async def in_func(interaction: Interaction, *args, **kwargs):
         """
         Декоратор для функций команд.
-        row_data - сломарь который вернет команда. по нему и генерируеться ответ.
+        row_data - словарь который вернет команда. по нему и генерируется ответ.
 
         embed_name - Имя ембеда прикрепленного к команде. если его нет то в ответе не будет ембеда
 
@@ -55,7 +55,7 @@ def command_custom(func):
         # await interaction.response.defer(ephemeral=False, thinking=True)
 
         raw_data = await func(interaction, *args, **kwargs)
-        print("ROW-DATA---------")
+        print("RAW-DATA---------")
         print(raw_data)
         print(raw_data.keys())
 

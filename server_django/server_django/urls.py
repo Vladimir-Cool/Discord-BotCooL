@@ -27,7 +27,7 @@ from user.views import (
     UserAPIUpdate,
     UserAPIDestroy,
 )
-from characters.views import CharactersViewSet, CharactersViewList
+from characters.views import CharactersViewSet, CharactersViewList, CharactersDeleteView
 from inventory.views import InventoryViewSet
 from items.views import ItemsViewSet
 from stats.views import StatsViewSet
@@ -55,12 +55,14 @@ urlpatterns = [
     path("api/v1/userslist/", UserAPIList.as_view()),
     path("api/v1/userslist/<int:pk>/", UserAPIUpdate.as_view()),
     path("api/v1/usersdelete/<int:pk>/", UserAPIDestroy.as_view()),
+    # Вернет персонажей по id User
+    path("api/v1/usercharacters/<int:pk>/", CharactersViewList.as_view()),
+    # Вернет персонажа по id User и name
+    path("api/v1/characters/<int:pk>/<str:name>/", CharactersViewList.as_view()),
     path(
-        "api/v1/usercharacters/<int:pk>/", CharactersViewList.as_view()
-    ),  # Вернет персонажей по id User
-    path(
-        "api/v1/characters/<int:pk>/<str:name>/", CharactersViewList.as_view()
-    ),  # Вернет персонажа по id User и name
+        "api/v1/characters/<int:user_id>/<str:name>/delete/",
+        CharactersDeleteView.as_view(),
+    ),
     # path("api/v1/charactersdelete/<int:pk>/<str:name>/", CharactersDelet.as_view())
     path("api/v1/embed/", EmbedAPIView.as_view()),
     path("api/v1/embed/<str:name>/", EmbedAPIView.as_view()),

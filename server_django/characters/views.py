@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics, status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -11,26 +12,6 @@ class CharactersViewSet(viewsets.ModelViewSet):
     queryset = CharactersModel.objects.all()
     serializer_class = CharactersSerializers
     lookup_field = "name"  # Изменяет параметр поиска на name
-
-    # def get_queryset(self, discord_id, name):
-    #     """Метод который переопределяет поведение queryset для выборки объектов"""
-    #     discord_id = self.kwargs.get("discord_id")
-    #     name = self.kwargs.get("name")
-    #     if not discord_id and not name:
-    #         return CharactersModel.objects.all()
-    #     return CharactersModel.objects.filter(discord_id=discord_id, name=name)
-    def destroy(self, request: Request, *args, **kwargs):
-        # тут надо дернуть персонажа из БД и проверить га соответствеи пользователю.
-        # Пользователя id надо передать
-        print(request.data)
-
-        instance = self.get_object()
-        print(instance.user.discord_id)
-        if instance.user.discord_id == request.data["discord_id"]:
-            self.perform_destroy(instance)
-            serializer = self.get_serializer(instance)
-            return Response(status=status.HTTP_204_NO_CONTENT, data=serializer.data)
-        return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class CharactersViewList(generics.ListCreateAPIView):
@@ -47,3 +28,37 @@ class CharactersViewList(generics.ListCreateAPIView):
             return CharactersModel.objects.filter(user=user, name=name)
         elif user and not name:
             return CharactersModel.objects.filter(user=user)
+
+
+class CharactersDeleteView(generics.DestroyAPIView):
+    """
+    Класс для удаления персонажа с предварительной проверкой пользователя который удаляет.
+    Пользователь может удалять только с воих персонажей.
+    Но можно подделать URL и удалить персонажа !!! ЭТО НАДО ДУМАТЬ.
+    """
+
+    serializer_class = CharactersSerializers
+    queryset = CharactersModel.objects.all()
+
+    def get_object(self):
+        """
+        Переназначаю функцию
+        для того чтобы фильтровать query_set по 2 параметрам:
+        user_id: id пользователя
+        name: имя персонажа
+        """
+        queryset = self.get_queryset()
+        filter_kwargs = {
+            "user_id": self.kwargs.get("user_id"),
+            "name": self.kwargs.get("name"),
+        }
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        return obj
+
+    def destroy(self, request: Request, *args, **kwargs):
+        """Тут помимо статус кода мы вернем и сам удаленный объект"""
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
