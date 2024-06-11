@@ -1,15 +1,18 @@
 from django.forms import model_to_dict
 from django.http import Http404
 from django.shortcuts import render
-from rest_framework import viewsets, generics
+from django.db import transaction
+from rest_framework import viewsets, generics, status
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 
 from .models import User
-from .serializers import UserSerializer, UserCharactersSerializer
+from .serializers import UserSerializer, UserCharactersSerializer, UserFullSerializer
 from .permissions import IsAdminOrReadOnly
+from inventory.serializers import InventorySerializers
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -63,14 +66,40 @@ class UserCharacterAPIList(generics.ListCreateAPIView):
     def get_queryset(self):
         """Метод который переопределяет поведение queryset для выборки объектов"""
         pk = self.kwargs.get("pk")
-
         if pk:
             user = User.objects.prefetch_related("characters").filter(discord_id=pk)
-            print(type(user.first()))
             return user
 
         return User.objects.prefetch_related("characters").all()
-        # ^^^^ filter(). с get() не работает потому что вернуть надо queryset
+
+    def create(self, request: Request, *args, **kwargs):
+        name = request.data["name"]
+
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user_obj = serializer.save()
+            print(serializer.data)
+
+            serializer_inventory = InventorySerializers(
+                data={
+                    "name": f"Инвентарь {name}",
+                    "user": serializer.data["discord_id"],
+                }
+            )
+            serializer_inventory.is_valid(raise_exception=True)
+            inventory_obj = serializer_inventory.save()
+
+        user_obj.refresh_from_db()
+        inventory_obj.refresh_from_db()
+
+        print(user_obj)
+        print(inventory_obj)
+
+        serializer_2: UserFullSerializer = UserFullSerializer(data=user_obj)
+        serializer_2.is_valid(raise_exception=True)
+
+        return Response(serializer_2.data, status=status.HTTP_201_CREATED)
 
 
 """ Тестовые приколы"""

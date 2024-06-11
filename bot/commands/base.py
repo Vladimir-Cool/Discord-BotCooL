@@ -1,6 +1,7 @@
 from functools import wraps
 from typing import Dict
 import json
+import traceback
 
 from discord import Interaction, Member, Embed
 
@@ -51,45 +52,48 @@ def command_custom(func):
         :return:
         """
         msg_data = {}
-        # try:
-        # await interaction.response.defer(ephemeral=False, thinking=True)
+        try:
+            # await interaction.response.defer(ephemeral=False, thinking=True)
 
-        raw_data = await func(interaction, *args, **kwargs)
-        print("RAW-DATA---------")
-        print(raw_data)
-        print(raw_data.keys())
+            raw_data = await func(interaction, *args, **kwargs)
+            print("RAW-DATA---------")
+            print(raw_data)
+            print(raw_data.keys())
 
-        if "content" in raw_data.keys():
-            msg_data["content"] = raw_data["content"]
+            if "content" in raw_data.keys():
+                msg_data["content"] = raw_data["content"]
 
-        # Тут не явный момент. Имя Embed внутри команды.
-        # Какой объект нужен для рендеренги нигде не определено.
-        # Это придется помнить.
-        embed_name = interaction.command.extras.get("embed_name")
-        if embed_name:
-            if "data_obj" in raw_data.keys():
-                async with EmbedAPIClient() as api_embed:
-                    raw_data["data_obj"]["embed_name"] = embed_name
-                    embed_raw = await api_embed.render_embed(raw_data["data_obj"])
-                msg_data["embed"] = create_embed(embed_raw)
+            # Тут не явный момент. Имя Embed внутри команды.
+            # Какой объект нужен для рендеренги нигде не определено.
+            # Это придется помнить.
+            embed_name = interaction.command.extras.get("embed_name")
+            if embed_name:
+                if "data_obj" in raw_data.keys():
+                    async with EmbedAPIClient() as api_embed:
+                        raw_data["data_obj"]["embed_name"] = embed_name
+                        embed_raw = await api_embed.render_embed(raw_data["data_obj"])
+                    msg_data["embed"] = create_embed(embed_raw)
 
-        # if "embed" in raw_data.keys():
-        #     msg_data["embed"] = create_embed(raw_data["embed"]
+            # if "embed" in raw_data.keys():
+            #     msg_data["embed"] = create_embed(raw_data["embed"]
 
-        if "view" in raw_data.keys():
-            msg_data["view"] = raw_data["view"]
+            if "view" in raw_data.keys():
+                msg_data["view"] = raw_data["view"]
 
-        if "error" in raw_data.keys():
-            msg_data["content"] = f"ОШИБКА!!! - {raw_data['error']}"
+            if "error" in raw_data.keys():
+                msg_data["content"] = f"ОШИБКА!!! - {raw_data['error']}"
 
-        print("MSG_DATA---------")
-        print(msg_data)
+            print("MSG_DATA---------")
+            print(msg_data)
 
-        # await interaction.edit_original_response(**msg_data)
-        await interaction.response.send_message(**msg_data)
+            # await interaction.edit_original_response(**msg_data)
+            await interaction.response.send_message(**msg_data)
 
-        # except Exception as e:
-        #     await interaction.edit_original_response(content=f"Ошибка: {e}")
+        except Exception as e:
+            # await interaction.edit_original_response(content=f"Ошибка: {e}")
+            print("------------Ошибка--------------")
+            print(traceback.format_exc())
+            await interaction.response.send_message(content=f"Ошибка: {e}")
 
     return in_func
 

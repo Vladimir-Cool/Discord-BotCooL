@@ -6,6 +6,7 @@ from rest_framework.parsers import JSONParser
 
 from .models import User
 from characters.serializers import CharactersSerializers
+from inventory.serializers import InventorySerializers
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             "name",
             "discord_id",
             "experience",
+            "inventory",
             "characters_count",
             "characters",
         ]
@@ -24,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
             "experience": {"read_only": True},
             "characters_count": {"read_only": True},
             "characters": {"read_only": True},
+            "inventory": {"read_only": True},
         }
 
 
@@ -31,6 +34,17 @@ class UserCharactersSerializer(UserSerializer):
     """Сериализация для модели User и связанной модели CharacterModel"""
 
     characters = CharactersSerializers(many=True, read_only=True)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        return representation
+
+
+class UserFullSerializer(UserSerializer):
+
+    characters = CharactersSerializers(many=True, read_only=True)
+    inventory = InventorySerializers(read_only=True)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

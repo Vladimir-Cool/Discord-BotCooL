@@ -63,24 +63,25 @@ async def user_info(interaction: Interaction, member: Member = None):
     # Ууууу тернарное выражение...
     discord_id = member.id if member else interaction.user.id
 
-    try:
-        async with UserAPIClient() as api_client:
-            user: list = await api_client.get_user(discord_id=discord_id)
-        if not user:
-            return {"error": "Такой пользователь не найден"}
+    # try:
+    async with UserAPIClient() as api_client:
+        user: list = await api_client.get_user(discord_id=discord_id)
 
-        if user["characters"]:
-            view = UserView(user["characters"])
-        else:
-            view = UserView()
+    if not user:
+        raise Exception("Такой пользователь не найден")
 
-        return {
-            "data_obj": user,
-            "view": view,
-        }
+    if user["characters"]:
+        view = UserView(user["characters"])
+    else:
+        view = UserView()
 
-    except APIException as e:
-        return {"error": e}
+    return {
+        "data_obj": user,
+        "view": view,
+    }
+
+    # except APIException as e:
+    #     return {"error": e}
 
 
 @command(name="удали", description="Удалит твой аккаунт насовсем, сильно на совсем")

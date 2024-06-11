@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from .models import ItemsModel
-from .enums import EQUIPMENT_SLOT_SHOICES
+from .enums import EQUIPMENT_SLOT_SHOICES, RARE_CHOICES
 
 
 class ItemsSerializers(serializers.ModelSerializer):
-    rarity = serializers.ChoiceField(choices=ItemsModel.RARE_CHOICES)
+    rarity = serializers.ChoiceField(choices=RARE_CHOICES)
     equipment_slot = serializers.ChoiceField(choices=EQUIPMENT_SLOT_SHOICES)
 
     class Meta:

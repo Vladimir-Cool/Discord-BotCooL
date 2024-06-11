@@ -52,6 +52,7 @@ urlpatterns = [
     path("api/v1/drf-auth/", include("rest_framework.urls")),
     path("api/v1/userswithchars/", UserCharacterAPIList.as_view()),
     path("api/v1/userswithchars/<int:pk>/", UserCharacterAPIList.as_view()),
+    path("api/v1/userswithchars/create/", UserCharacterAPIList.as_view()),
     path("api/v1/userslist/", UserAPIList.as_view()),
     path("api/v1/userslist/<int:pk>/", UserAPIUpdate.as_view()),
     path("api/v1/usersdelete/<int:pk>/", UserAPIDestroy.as_view()),

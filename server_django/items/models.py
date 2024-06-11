@@ -2,7 +2,7 @@ from django.db import models
 
 from inventory.models import InventoryModel
 from characters.models import CharactersModel
-from .enums import EQUIPMENT_SLOT_SHOICES
+from .enums import EQUIPMENT_SLOT_SHOICES, RARE_CHOICES
 
 
 class ItemsModel(models.Model):
@@ -14,21 +14,14 @@ class ItemsModel(models.Model):
     is_stackable = models.BooleanField(default=False)
     is_used = models.BooleanField(default=False)
 
-    RARE_CHOICES = (
-        ("C", "common"),
-        ("U", "uncommon"),
-        ("R", "rarest"),
-        ("E", "epic"),
-        ("L", "legendary"),
-        ("M", "mythic"),
-    )
     rarity = models.CharField(max_length=1, choices=RARE_CHOICES, default="C")
     equipment_slot = models.CharField(
         max_length=3, choices=EQUIPMENT_SLOT_SHOICES, default="non"
     )
 
-    # inventory = models.ManyToManyField(
-    #     to="inventory.InventoryModel", related_name="items", related_query_name="item"
+    # inventorys = models.ManyToManyField(
+    #     to="inventory.InventoryModel",
+    #     related_name="items",
     # )
 
     class Meta:

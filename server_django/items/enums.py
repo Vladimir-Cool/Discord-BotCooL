@@ -8,3 +8,12 @@ EQUIPMENT_SLOT_SHOICES = (
     ("thd", "two hand"),
     ("non", "not equipped"),
 )
+
+RARE_CHOICES = (
+    ("C", "common"),
+    ("U", "uncommon"),
+    ("R", "rarest"),
+    ("E", "epic"),
+    ("L", "legendary"),
+    ("M", "mythic"),
+)

@@ -17,6 +17,10 @@ class User(models.Model):
     last_activity_time = models.DateTimeField(default=now)
     registration_date = models.DateTimeField(default=now)
 
+    # inventory = models.OneToOneField(
+    #     to="inventory.InventoryModel", on_delete=models.CASCADE, related_name="user"
+    # )
+
     # roles = models.ManyToManyField()
     # active_roles = models.ForeignKey()
 
