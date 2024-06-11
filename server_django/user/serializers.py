@@ -42,6 +42,7 @@ class UserCharactersSerializer(UserSerializer):
 
 
 class UserFullSerializer(UserSerializer):
+    """Класс для вывода полного объекта пользователь со всеми связанными с ним объектами"""
 
     characters = CharactersSerializers(many=True, read_only=True)
     inventory = InventorySerializers(read_only=True)

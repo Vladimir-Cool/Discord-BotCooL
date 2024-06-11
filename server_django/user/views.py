@@ -91,13 +91,14 @@ class UserCharacterAPIList(generics.ListCreateAPIView):
             inventory_obj = serializer_inventory.save()
 
         user_obj.refresh_from_db()
-        inventory_obj.refresh_from_db()
+        # inventory_obj.refresh_from_db()
 
         print(user_obj)
-        print(inventory_obj)
+        # print(inventory_obj)
 
-        serializer_2: UserFullSerializer = UserFullSerializer(data=user_obj)
-        serializer_2.is_valid(raise_exception=True)
+        serializer_2: UserFullSerializer = UserFullSerializer(user_obj)
+        # serializer_2 = self.get_serializer(user_obj)
+        print("чек")
 
         return Response(serializer_2.data, status=status.HTTP_201_CREATED)
 
