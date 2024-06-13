@@ -84,9 +84,10 @@ async def user_info(interaction: Interaction, member: Member = None):
     #     return {"error": e}
 
 
-@command(name="удали", description="Удалит твой аккаунт насовсем, сильно на совсем")
+@command_custom
 async def user_del(interaction: Interaction):
     async with UserAPIClient() as api_client:
         resource = await api_client.del_user(interaction.user.id)
 
-    await interaction.response.send_message(f"Результат {resource}")
+    return {"content": resource}
+

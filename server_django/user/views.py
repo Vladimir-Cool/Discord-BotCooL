@@ -12,8 +12,8 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from .models import User
 from .serializers import UserSerializer, UserCharactersSerializer, UserFullSerializer
 from .permissions import IsAdminOrReadOnly
-from inventory.serializers import InventorySerializers
-
+from inventory.serializers import InventorySerializer, InventoryFullSerializer, SlotSerializer
+from inventory.models import InventoryModel
 
 class UserViewSet(viewsets.ModelViewSet):
     # queryset = User.objects.all()
@@ -79,26 +79,32 @@ class UserCharacterAPIList(generics.ListCreateAPIView):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             user_obj = serializer.save()
-            print(serializer.data)
 
-            serializer_inventory = InventorySerializers(
+            # Создаем инвентарь для пользователя
+            serializer_inventory = InventorySerializer(
                 data={
                     "name": f"Инвентарь {name}",
                     "user": serializer.data["discord_id"],
                 }
             )
             serializer_inventory.is_valid(raise_exception=True)
-            inventory_obj = serializer_inventory.save()
+            inventory_obj: InventoryModel = serializer_inventory.save()
+            
+            # Создаем слоты в инвенторе
+            list_slot_obj = [] # это не обязательно, собирать слоты в список?
+            for i in range(inventory_obj.size + inventory_obj.extra_size):
+                print(f"Это ш - {i}")
+                serializer_slot = SlotSerializer(data={
+                    "inventory": serializer_inventory.data["id"]
+                })
+                serializer_slot.is_valid(raise_exception=True)
+                slot_obj = serializer_slot.save()
+                list_slot_obj.append(slot_obj) # это не обязательно, подумать надо ли это?
 
         user_obj.refresh_from_db()
         # inventory_obj.refresh_from_db()
 
-        print(user_obj)
-        # print(inventory_obj)
-
         serializer_2: UserFullSerializer = UserFullSerializer(user_obj)
-        # serializer_2 = self.get_serializer(user_obj)
-        print("чек")
 
         return Response(serializer_2.data, status=status.HTTP_201_CREATED)
 

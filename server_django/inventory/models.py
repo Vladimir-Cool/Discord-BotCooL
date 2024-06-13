@@ -23,3 +23,17 @@ class InventoryModel(models.Model):
     #     on_delete=models.CASCADE,
     #     related_name="inventory",
     # )
+
+class SlotModel(models.Model):
+    """Модель слотов инвенторя"""
+    content = models.ForeignKey(to="items.ItemsModel", on_delete=models.SET_NULL, default=None, null=True, blank=True)
+    inventory = models.ForeignKey(to="inventory.InventoryModel", on_delete=models.CASCADE, related_name="slots")
+
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Слот"
+        verbose_name_plural = "Слоты"
+
+    def __str__(self):
+        return f"{self.inventory.name} содержит {self.content}"

@@ -6,7 +6,7 @@ from rest_framework.parsers import JSONParser
 
 from .models import User
 from characters.serializers import CharactersSerializers
-from inventory.serializers import InventorySerializers
+from inventory.serializers import InventorySerializer, InventoryFullSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -45,7 +45,7 @@ class UserFullSerializer(UserSerializer):
     """Класс для вывода полного объекта пользователь со всеми связанными с ним объектами"""
 
     characters = CharactersSerializers(many=True, read_only=True)
-    inventory = InventorySerializers(read_only=True)
+    inventory = InventoryFullSerializer(read_only=True)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

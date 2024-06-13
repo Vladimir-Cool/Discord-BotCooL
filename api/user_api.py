@@ -25,7 +25,7 @@ class UserAPIClient(APIClient):
             "discord_id": discord_id,
             "name": name,
         }
-        response: Response = await self.post(url=f"{self.url}users/", json=data)
+        response: Response = await self.post(url=f"{self.url}userswithchars/create/", json=data)
         return response.json()
 
     async def del_user(self, discord_id):
