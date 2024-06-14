@@ -3,6 +3,7 @@ import os
 from pydantic_settings import BaseSettings
 from bot.commands.test_command import test_one, test_two, test_three
 from bot.commands.refresh import refresh_com
+from bot.commands.inventory_command import invent_info
 from bot.commands.user_commands import user_info, user_reg, user_del
 from bot.commands.help import help_func
 from bot.commands.character_commands import (
@@ -35,4 +36,5 @@ handlers_list = {
     "char_create": character_create,
     "char_delete": character_delete,
     "user_del": user_del,
+    "invent_info": invent_info,
 }

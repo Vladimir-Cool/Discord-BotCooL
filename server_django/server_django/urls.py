@@ -11,7 +11,7 @@ from user.views import (
     UserAPIDestroy,
 )
 from characters.views import CharactersViewSet, CharactersViewList, CharactersDeleteView
-from inventory.views import InventoryViewSet
+from inventory.views import InventoryViewSet, InventoryListAPIView
 from items.views import ItemsViewSet
 from stats.views import StatsViewSet
 from embed.views import EmbedAPIView, EmbedUserView
@@ -20,7 +20,7 @@ from commands.views import CommandsAPIView
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"characters", CharactersViewSet, basename="characters")
-router.register(r"inventory", InventoryViewSet, basename="inventory")
+# router.register(r"inventory", InventoryViewSet, basename="inventory")
 router.register(r"items", ItemsViewSet, basename="items")
 router.register(r"stats", StatsViewSet, basename="stats")
 # router.register(r"embed", EmbedAPIView, basename="embed")
@@ -47,6 +47,9 @@ urlpatterns = [
         "api/v1/characters/<int:user_id>/<str:name>/delete/",
         CharactersDeleteView.as_view(),
     ),
+    path("api/v1/inventory/", InventoryListAPIView.as_view()),
+    path("api/v1/inventory/<int:user>", InventoryListAPIView.as_view()),
+
     # path("api/v1/charactersdelete/<int:pk>/<str:name>/", CharactersDelet.as_view())
     path("api/v1/embed/", EmbedAPIView.as_view()),
     path("api/v1/embed/<str:name>/", EmbedAPIView.as_view()),

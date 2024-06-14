@@ -1,5 +1,3 @@
-from httpx import Response
-
 from discord import Interaction
 
 from .base import command_custom

@@ -34,16 +34,29 @@ class EmbedUserView(generics.ListCreateAPIView):
         return None
 
     def embed_render(self, template: str, context_data: dict):
+        """Значения поля fields должно быть строкой.
+        ковычки экранируем -\"
+        списки обрамляем ковычками - "[]"
+        """
         template_instance = Template(template)
-
+        print(context_data)
         context = Context(context_data)
 
         result_render = template_instance.render(context)
+
+        # print(result_render)
+
         result_json = json.loads(result_render)
+
+        # print("-1-")
+        # print(result_json)
 
         if "fields" in result_json.keys():
             result_json["fields"] = json.loads(result_json["fields"][:-2] + "]")
             # -->[:-2] + "]"<-- Это я ',' убираю которая появилась в результате рендеринга
+
+        # print("-2-")
+        # print(result_json)
 
         return result_json
 

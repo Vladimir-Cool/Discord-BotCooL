@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import InventoryModel, SlotModel
-
+from items.serializers import ItemsSimpleSerializer
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +17,8 @@ class InventorySerializer(serializers.ModelSerializer):
 
 class SlotSerializer(serializers.ModelSerializer):
 
+    content = ItemsSimpleSerializer(read_only=True)
+
     class Meta:
         model = SlotModel
         fields = ("id", "inventory", "content", "count")
@@ -24,7 +26,7 @@ class SlotSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "id": {"read_only": True},
             "count": {"read_only": True},
-            "contenr": {"read_only": True},
+            "content": {"read_only": True},
         }
 
 class InventoryFullSerializer(InventorySerializer):
